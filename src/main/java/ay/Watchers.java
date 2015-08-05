@@ -95,13 +95,6 @@ public class Watchers {
                 return BehaviorSubject.create();
             }
         },
-        /** {@link AsyncSubject} */
-        ASYNC {
-            @Override
-            Subject<Context, Context> create() {
-                return AsyncSubject.create();
-            }
-        },
         /** {@link ReplaySubject} */
         REPLAY {
             @Override
