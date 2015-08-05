@@ -1,4 +1,4 @@
-package com.yyfrankyy.watchers;
+package ay;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -8,8 +8,9 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.subjects.Subject;
+import rx.subjects.*;
 
+import java.lang.annotation.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -17,6 +18,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <h3>Yet another EventBus based on RxJava's {@link Subject} and Guava's {@link Cache}.</h3>
@@ -69,6 +72,76 @@ import java.util.concurrent.ConcurrentMap;
  * </pre>
  */
 public class Watchers {
+
+    /** base interface for identify this is a watcher. */
+    @Config
+    public interface Watcher {
+
+    }
+
+    /** all kinds of subjects. */
+    public enum Subjects {
+        /** {@link PublishSubject} */
+        PUBLISH {
+            @Override
+            Subject<Context, Context> create() {
+                return PublishSubject.create();
+            }
+        },
+        /** {@link BehaviorSubject} */
+        BEHAVIOR {
+            @Override
+            Subject<Context, Context> create() {
+                return BehaviorSubject.create();
+            }
+        },
+        /** {@link AsyncSubject} */
+        ASYNC {
+            @Override
+            Subject<Context, Context> create() {
+                return AsyncSubject.create();
+            }
+        },
+        /** {@link ReplaySubject} */
+        REPLAY {
+            @Override
+            Subject<Context, Context> create() {
+                return ReplaySubject.create();
+            }
+        };
+        abstract Subject<Context, Context> create();
+    }
+
+    static class Context {
+        final AtomicBoolean consumed = new AtomicBoolean(false);
+        final Method method;
+        final Object[] args;
+
+        Context(Method method, Object[] args) {
+            this.method = method;
+            this.args = args;
+        }
+    }
+
+    /** Configuration for watcher. */
+    @Documented
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Config {
+        /** choose a subject, or use {@link PublishSubject} by default. */
+        Subjects subject() default Subjects.PUBLISH;
+        /** delegate for {@link Observable#sample(long, TimeUnit)} */
+        long sample() default 0;
+        /** delegate for {@link Observable#sample(long, TimeUnit)} */
+        TimeUnit timeunit() default TimeUnit.MILLISECONDS;
+        /** delegate for {@link Observable#onBackpressureDrop()} */
+        boolean backpressureDrop() default false;
+        /** delegate for {@link Observable#onBackpressureBuffer(long)} */
+        int backpressureBuffer() default 0;
+        /** consume the arguments just once, for the listeners whom first bind to this watcher. */
+        boolean once() default false;
+    }
+
     static final Watchers instance = new Watchers();
 
     final ConcurrentMap<Class<? extends Watcher>, Cache<Watcher, Subscription>>
@@ -76,7 +149,7 @@ public class Watchers {
     final ConcurrentMap<Class<? extends Watcher>, Subject<Context, Context>>
             producers = new ConcurrentHashMap<>();
 
-    private final ConcurrentMap<Class<? extends Watcher>, Watcher> watchers =
+    final ConcurrentMap<Class<? extends Watcher>, Watcher> watchers =
             new ConcurrentHashMap<>();
 
     private Watchers() { }
@@ -105,7 +178,7 @@ public class Watchers {
         instance.unbindAllWatchers(clazz);
     }
 
-    private <T extends Watcher> T getWatcher(Class<T> clz) {
+    <T extends Watcher> T getWatcher(Class<T> clz) {
         if (!watchers.containsKey(clz)) {
             watchers.putIfAbsent(clz, create(clz));
         }
@@ -113,7 +186,7 @@ public class Watchers {
         return clz.cast(watchers.get(clz));
     }
 
-    private static <T extends Watcher> T create(Class<T> clazz) {
+    static <T extends Watcher> T create(Class<T> clazz) {
         if (!clazz.isInterface()) {
             throw new IllegalArgumentException(
                     "Only interface endpoint definitions are supported.");
@@ -277,7 +350,7 @@ public class Watchers {
         }
     }
 
-    /** just for test. */
+    /** for test */
     void unbindAllWatchers(Class<? extends Watcher> clazz) {
         prepare(clazz);
         consumers.get(clazz).invalidateAll();

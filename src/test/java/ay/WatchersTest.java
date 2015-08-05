@@ -1,28 +1,26 @@
-package com.yyfrankyy.watchers;
+package ay;
 
 import org.junit.Before;
 import org.junit.Test;
 import rx.schedulers.Schedulers;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public final class WatchersTest {
-    interface DefaultWatcher extends Watcher {
+    interface DefaultWatcher extends Watchers.Watcher {
         void test(boolean success);
     }
 
-    @Config(subject = Subjects.BEHAVIOR)
-    interface BehaviorWatcher extends Watcher {
+    @Watchers.Config(subject = Watchers.Subjects.BEHAVIOR)
+    interface BehaviorWatcher extends Watchers.Watcher {
         void test(boolean success);
     }
 
-    @Config(subject = Subjects.REPLAY)
-    interface ReplayWatcher extends Watcher {
+    @Watchers.Config(subject = Watchers.Subjects.REPLAY)
+    interface ReplayWatcher extends Watchers.Watcher {
         void test(boolean success);
     }
 

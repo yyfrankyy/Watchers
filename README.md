@@ -1,12 +1,12 @@
 # Watchers
 
-Yet another EventBus, with a Proxy-based API.
+Yet another EventBus for Android with a simpler API.
 
 Based on [*RxJava's Subject*][1] and [*Guava's Cache*][2].
 
 ## Goals
 
- 0. Simplest API
+ 0. Simpler API
  1. Thread-safe
  2. Fast
  3. No memory leak
