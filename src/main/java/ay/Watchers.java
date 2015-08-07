@@ -22,54 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * <h3>Yet another EventBus based on RxJava's {@link Subject} and Guava's {@link Cache}.</h3>
- *
- * <p>It's thread-safe, memory-friendly, with the simplest API in the world.</p>
- *
- * <h5>1. define an event, by extending the {@link Watcher} interface</h5>
- * <pre>
- *     public interface PushWatcher extends Watcher {
- *         void notify(PushMessage msg);
- *     }
- * </pre>
- *
- * <h5>2. listener to an event, by implementing the methods. </h5>
- * <pre>
- *      PushWatcher watcher = new PushWatcher() {
- *          public void notify(PushMessage msg) {
- *              Log.d("watcher", "receive msg");
- *          }
- *      };
- * </pre>
- *
- * <h5>3. bind or unbind an event. </h5>
- * <pre>
- *      Watchers.bind(watcher);
- *      Watchers.unbind(watcher);
- * </pre>
- *
- * <h5>3. trigger an event. </h5>
- * <pre>
- *     Watchers.of(PushWatcher.class).notify(new PushMessage());
- * </pre>
- *
- * <h5>Event more..</h5>
- * <pre>
- *     public class MyFragment extends Fragment implement PushWatcher, NetworkChangedWatcher {
- *          public void notify(PushMessage msg) {
- *              Log.d("watcher", "receive msg: " + msg);
- *          }
- *          public void onNetworkChanged(boolean isConnected) {
- *              Log.d("watcher", "network connected: " + isConnected);
- *          }
- *          protected void onStart() {
- *              Watchers.bind(this);
- *          }
- *          protected void onStop() {
- *              Watchers.unbind(this);
- *          }
- *     }
- * </pre>
+ * Yet another EventBus for Android with a simpler API.
  */
 public class Watchers {
 
