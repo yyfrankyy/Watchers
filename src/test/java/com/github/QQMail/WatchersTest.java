@@ -1,4 +1,4 @@
-package ay;
+package com.github.QQMail;
 
 import org.junit.Before;
 import org.junit.Test;

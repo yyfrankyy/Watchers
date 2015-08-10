@@ -12,6 +12,16 @@ Based on [*RxJava's Subject*][1] and [*Guava's Cache*][2].
  3. No memory leak
  4. Callback scheduling
 
+### Install from [jitpack][3]
+
+	repositories {
+	    maven { url "https://jitpack.io" }
+	}
+
+	dependencies {
+	    compile 'com.github.QQMail:Watchers:watchers-1.0'
+	}
+
 ### Getting Started
 
 #### 1. Define an event, by extending the `Watcher` interface
@@ -38,9 +48,9 @@ Based on [*RxJava's Subject*][1] and [*Guava's Cache*][2].
 
 ### Proxy-based API design
 
-[Retrofit][3] show me how elegant that a Proxy-based interface could be, I started to rethink what can I use that for API design of a EventBus.
+[Retrofit][4] show me how elegant that a Proxy-based interface could be, I started to rethink what can I use that for API design of a EventBus.
 
-[Guava EventBus][4], [square/otto][5] and [greenrobot/EventBus][6], their APIs look so similar: define an event; binding/unbinding an event; trigger an event. `Event Object` are necessary, `post()` method are necessary, register and unregister are paired, otherwise listeners will leak, the type of an event was exposed to user as `@Subscriber`, or `@Produce` by synchronized call like [square/otto][7].
+[Guava EventBus][5], [square/otto][6] and [greenrobot/EventBus][7], their APIs look so similar: define an event; binding/unbinding an event; trigger an event. `Event Object` are necessary, `post()` method are necessary, register and unregister are paired, otherwise listeners will leak, the type of an event was exposed to user as `@Subscriber`, or `@Produce` by synchronized call like [square/otto][8].
 
 When I dig into to these APIs, compare to the Java language itself, I found something useful.
 
@@ -73,7 +83,7 @@ So there is no need for specific `unbind()`, unless you don’t want the object 
 
 RxJava's Subject was chosen because of two specific reasons: rich supports for subscriber behaviour and task scheduling.
 
-[Backpressure][8] support is the main target we are dealing with.
+[Backpressure][9] support is the main target we are dealing with.
 
 > For example, we have a `LoadingWatcher` that emit really fast for showing download progress, we use `sample` to limit callback frequency (for ui thread), and `BehaviorSubject`for whoever listen to the watcher, it should received the latest progress.
 
@@ -127,9 +137,10 @@ Callback scheduling make easy when use RxJava’s `observeOn()`, so we just pass
 
 [1]:	http://reactivex.io/documentation/subject.html
 [2]:	https://code.google.com/p/guava-libraries/wiki/CachesExplained
-[3]:	https://github.com/square/retrofit
-[4]:	https://code.google.com/p/guava-libraries/wiki/EventBusExplained
-[5]:	http://square.github.io/otto/
-[6]:	https://github.com/greenrobot/EventBus
-[7]:	http://square.github.io/otto/
-[8]:	http://reactivex.io/documentation/operators/backpressure.html
+[3]:	https://jitpack.io/#QQMail/Watchers/watchers-1.0
+[4]:	https://github.com/square/retrofit
+[5]:	https://code.google.com/p/guava-libraries/wiki/EventBusExplained
+[6]:	http://square.github.io/otto/
+[7]:	https://github.com/greenrobot/EventBus
+[8]:	http://square.github.io/otto/
+[9]:	http://reactivex.io/documentation/operators/backpressure.html

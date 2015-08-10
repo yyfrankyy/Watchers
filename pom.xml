@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ay</groupId>
+    <groupId>com.github.QQMail</groupId>
     <artifactId>Watchers</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Watchers (Parent)</name>
     <description>Yet another EventBus for Android with a simpler API.</description>
-    <url>https://github.com/yyfrankyy/Watchers</url>
+    <url>https://github.com/QQMail/Watchers</url>
 
     <dependencies>
         <dependency>
@@ -41,15 +41,15 @@
     </properties>
 
     <scm>
-        <url>https://github.com/yyfrankyy/Watchers/</url>
-        <connection>scm:git:https://github.com/yyfrankyy/Watchers.git</connection>
-        <developerConnection>scm:git:git@github.com:yyfrankyy/Watchers.git</developerConnection>
+        <url>https://github.com/QQMail/Watchers/</url>
+        <connection>scm:git:https://github.com/QQMail/Watchers.git</connection>
+        <developerConnection>scm:git:git@github.com:QQMail/Watchers.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>GitHub Issues</system>
-        <url>https://github.com/yyfrankyy/Watchers/issues</url>
+        <url>https://github.com/QQMail/Watchers/issues</url>
     </issueManagement>
 
     <licenses>
